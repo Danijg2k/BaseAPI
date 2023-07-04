@@ -8,6 +8,6 @@ namespace BaseAPI.Context
         public CityContext(DbContextOptions<CityContext> options) 
             : base(options) { }
 
-        public DbSet<City> Cities { get; set; } = null!;
+        public DbSet<City> Cities { get; set; }
     }
 }

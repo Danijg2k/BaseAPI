@@ -4,6 +4,11 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+	<!-- Enable XML comments for descriptions -->
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	<!-- Suppress warnings project wide (for types and members that are undocumented with XML, after last line added - 'GenerateDocumentationFile') -->
+	<NoWarn>$(NoWarn);1591</NoWarn>
+	<!-- -->
   </PropertyGroup>
 
   <ItemGroup>
