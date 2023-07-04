@@ -10,8 +10,9 @@ using BaseAPI.Models;
 
 namespace BaseAPI.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
+    [Produces("application/json")]
     public class CitiesController : ControllerBase
     {
         private readonly CityContext _context;
@@ -33,7 +34,9 @@ namespace BaseAPI.Controllers
         ///     GET api/Cities
         ///     
         /// </remarks>
+        /// <response code="200">Always returned (if data does or doesn't exist)</response>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<City>>> GetCities()
         {
             return await _context.Cities.ToListAsync();
@@ -52,7 +55,11 @@ namespace BaseAPI.Controllers
         ///     GET api/Cities/1
         ///     
         /// </remarks>
+        /// <response code="200">If item with given id is retrieved</response>
+        /// <response code="404">If item with given id doesn't exist</response>
         [HttpGet("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<City>> GetCity(int id)
         {
             var city = await _context.Cities.FindAsync(id);
@@ -84,7 +91,13 @@ namespace BaseAPI.Controllers
         ///     }
         /// 
         /// </remarks>
+        /// <response code="204">If the item is updated</response>
+        /// <response code="400">If the item is null / If id from url and id from body aren't the same</response>
+        /// <response code="404">If both ids are equal but don't belong to an existing item</response>
         [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> PutCity(int id, City city)
         {
             if (id != city.Id)
@@ -131,7 +144,11 @@ namespace BaseAPI.Controllers
         ///     }
         /// 
         /// </remarks>
+        /// <response code="201">Returns the newly created item</response>
+        /// <response code="400">If the item is null</response>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<City>> PostCity(City city)
         {
           if (_context.Cities == null)
@@ -157,7 +174,11 @@ namespace BaseAPI.Controllers
         ///     DELETE api/Cities/1
         ///     
         /// </remarks>
+        /// <response code="204">If the item is deleted</response>
+        /// <response code="404">If the item is not found</response>
         [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteCity(int id)
         {
             if (_context.Cities == null)
