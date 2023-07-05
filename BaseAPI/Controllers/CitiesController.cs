@@ -102,7 +102,8 @@ namespace BaseAPI.Controllers
         {
             if (id != city.Id)
             {
-                return BadRequest();
+                throw new BadHttpRequestException("Ids of given item and url don't match");
+                //return BadRequest();
             }
 
             _context.Entry(city).State = EntityState.Modified;
@@ -151,14 +152,10 @@ namespace BaseAPI.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<City>> PostCity(City city)
         {
-          if (_context.Cities == null)
-          {
-              return Problem("Entity set 'CityContext.Cities'  is null.");
-          }
             _context.Cities.Add(city);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCity", new { id = city.Id }, city);
+            return CreatedAtAction(nameof(GetCity), new { id = city.Id }, city);
         }
 
 
@@ -181,10 +178,6 @@ namespace BaseAPI.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteCity(int id)
         {
-            if (_context.Cities == null)
-            {
-                return NotFound();
-            }
             var city = await _context.Cities.FindAsync(id);
             if (city == null)
             {
