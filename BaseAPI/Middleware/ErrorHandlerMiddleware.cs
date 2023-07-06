@@ -8,7 +8,7 @@
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task InvokeAsync(HttpContext context)
         {
             try
             {
@@ -24,6 +24,9 @@
                     default:
                         break;
                 }
+                // Output the custom exception message
+                context.Response.ContentType = "text/plain";
+                await context.Response.WriteAsync(ex?.Message);
             }
         }
     }
