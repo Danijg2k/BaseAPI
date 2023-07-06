@@ -1,5 +1,5 @@
-﻿using BaseAPI.Constants;
-using BaseAPI.Logging;
+﻿using BaseAPI.Logging;
+using BaseAPI.Utilities.Constants;
 using System.Diagnostics;
 
 namespace BaseAPI.Middleware
@@ -7,9 +7,9 @@ namespace BaseAPI.Middleware
     public class TimeLoggingMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly ILoggingService _logger;
+        private readonly ILogger<TimeLoggingMiddleware> _logger;
 
-        public TimeLoggingMiddleware(RequestDelegate next, ILoggingService logger)
+        public TimeLoggingMiddleware(RequestDelegate next, ILogger<TimeLoggingMiddleware> logger)
         {
             _next = next;
             _logger = logger;
@@ -23,7 +23,8 @@ namespace BaseAPI.Middleware
             await _next(context);
 
             watch.Stop();
-            _logger.Log(LogLevel.Information, LoggingConstants.execTime, $"{watch.ElapsedMilliseconds}ms");
+            // _logger.Log(LogLevel.Information, LoggingConstants.execTime, watch.ElapsedMilliseconds);
+            _logger.LogInformation(LoggingConstants.execTime, watch.ElapsedMilliseconds);
         }
     }
 }

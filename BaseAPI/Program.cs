@@ -1,3 +1,4 @@
+using BaseAPI.Configuration;
 using BaseAPI.Context;
 using BaseAPI.Logging;
 using BaseAPI.Middleware;
@@ -9,7 +10,10 @@ using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add Logging Service to services collection
+// Add Logger (Microsoft Extensions Logging NuGet)
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+// Add Custom Logging Service to services collection
 builder.Services.AddTransient<ILoggingService, LoggingService>();
 
 // Add services to the container.
@@ -21,24 +25,9 @@ builder.Services.AddDbContext<CityContext>(opt =>
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();     // Only required for minimal APIs
-builder.Services.AddSwaggerGen(options =>       // Configure Swagger
-{
-    options.SwaggerDoc("v1", new OpenApiInfo
-    {
-        Version = "v1",
-        Title = "BaseAPI",
-        Description = "An ASP.NET Core 6.0 Web API that can be used as a template for future projects",
-        Contact = new OpenApiContact
-        {
-            Name = "Contact",
-            Url = new Uri("https://www.linkedin.com/in/daniel-jimenez-gutierrez/")
-        }
-    });
 
-    // Configure Swagger to use XML (Property 'GenerateDocumentationFile' must be included in {NameOfProject.csproj}
-    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
-});
+// Configure Swagger
+builder.Services.ConfigureSwagger();
 
 var app = builder.Build();
 

@@ -1,14 +1,14 @@
-﻿using BaseAPI.Constants;
-using BaseAPI.Logging;
+﻿using BaseAPI.Logging;
+using BaseAPI.Utilities.Constants;
 
 namespace BaseAPI.Middleware
 {
     public class LoggingMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly ILoggingService _logger;
+        private readonly ILogger<LoggingMiddleware> _logger;
 
-        public LoggingMiddleware(RequestDelegate next, ILoggingService logger)
+        public LoggingMiddleware(RequestDelegate next, ILogger<LoggingMiddleware> logger)
         {
             _next = next;
             _logger = logger;
@@ -26,7 +26,7 @@ namespace BaseAPI.Middleware
                                                         .Select(x => x.Key)
                                                         .Distinct();
             // And log them
-            _logger.Log(LogLevel.Information, LoggingConstants.headers, string.Join(", ", uniqueResponseHeaders));
+            _logger.LogInformation(LoggingConstants.headers, string.Join(", ", uniqueResponseHeaders));
         }
     }
 }

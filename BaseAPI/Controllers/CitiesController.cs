@@ -37,9 +37,9 @@ namespace BaseAPI.Controllers
         /// <response code="200">Always returned (if data does or doesn't exist)</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<City>>> GetCities()
+        public async Task<IActionResult> GetCities()
         {
-            return await _context.Cities.ToListAsync();
+            return Ok(await _context.Cities.ToListAsync());
         }
 
         // GET: api/Cities/5
@@ -60,7 +60,7 @@ namespace BaseAPI.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<City>> GetCity(int id)
+        public async Task<IActionResult> GetCity(int id)
         {
             var city = await _context.Cities.FindAsync(id);
 
@@ -69,7 +69,7 @@ namespace BaseAPI.Controllers
                 return NotFound();
             }
 
-            return city;
+            return Ok(city);
         }
 
         // PUT: api/Cities/5
