@@ -1,12 +1,8 @@
 using BaseAPI.Configuration;
 using BaseAPI.Context;
-using BaseAPI.Logging;
-using BaseAPI.Middleware;
 using BaseAPI.Middleware.Extensions;
 using BaseAPI.Middleware.Settings;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,7 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 // Add Custom Logging Service to services collection
-builder.Services.AddTransient<ILoggingService, LoggingService>();
+// builder.Services.AddTransient<ILoggingService, LoggingService>();
 
 // Add services to the container.
 builder.Services.AddControllers();

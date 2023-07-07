@@ -1,6 +1,6 @@
 ﻿namespace BaseAPI.Logging
 {
-    public class LoggingService : ILoggingService
+    public class LoggingService : ILoggingService   // Not used currently. Using Logging from Microsoft.Extensions.Logging (check Middlewares)
     {
         public void Log(LogLevel level, string content, string message)
         {

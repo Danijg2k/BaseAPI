@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using BaseAPI.Context;
 using BaseAPI.Models;
+using BaseAPI.Models.Dto;
 
 namespace BaseAPI.Controllers
 {
@@ -39,7 +40,9 @@ namespace BaseAPI.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<IActionResult> GetCities()
         {
-            return Ok(await _context.Cities.ToListAsync());
+            return Ok(await _context.Cities
+                .Select(x => ItemToDTO(x))
+                .ToListAsync());
         }
 
         // GET: api/Cities/5
@@ -69,7 +72,7 @@ namespace BaseAPI.Controllers
                 return NotFound();
             }
 
-            return Ok(city);
+            return Ok(ItemToDTO(city));
         }
 
         // PUT: api/Cities/5
@@ -78,7 +81,7 @@ namespace BaseAPI.Controllers
         /// Update
         /// </summary>
         /// <param name="id">id of the [city] to update</param>
-        /// <param name="city">new data for the updated [city]</param>
+        /// <param name="cityDto">new data for the updated [city]</param>
         /// <remarks>
         /// Sample request:    
         ///    
@@ -98,13 +101,24 @@ namespace BaseAPI.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> PutCity(int id, City city)
+        public async Task<IActionResult> PutCity(int id, CityDto cityDto)
         {
-            if (id != city.Id)
+            if (id != cityDto.Id)
             {
                 throw new BadHttpRequestException("Ids of given item and url don't match");
                 //return BadRequest();
             }
+
+            var city = await _context.Cities.FindAsync(id);
+
+            if (city == null)
+            {
+                return NotFound();
+            }
+
+            city.Name = cityDto.Name;
+            city.Population = cityDto.Population;
+            city.IsCapital = cityDto.IsCapital;
 
             _context.Entry(city).State = EntityState.Modified;
 
@@ -132,7 +146,7 @@ namespace BaseAPI.Controllers
         /// <summary>
         /// Create
         /// </summary>
-        /// <param name="city">data of the [city] to add</param>
+        /// <param name="cityDto">data of the [city] to add</param>
         /// <returns>created [city]</returns>
         /// /// <remarks>
         /// Sample request:    
@@ -150,12 +164,19 @@ namespace BaseAPI.Controllers
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<City>> PostCity(City city)
+        public async Task<IActionResult> PostCity(CityDto cityDto)
         {
+            var city = new City
+            {
+                Name = cityDto.Name,
+                Population = cityDto.Population,
+                IsCapital = cityDto.IsCapital
+            };
+
             _context.Cities.Add(city);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetCity), new { id = city.Id }, city);
+            return CreatedAtAction(nameof(GetCity), new { id = city.Id }, ItemToDTO(city));
         }
 
 
@@ -190,9 +211,23 @@ namespace BaseAPI.Controllers
             return NoContent();
         }
 
+
+        // Check if city exists in DB (used by the rest of CRUD methods)
         private bool CityExists(int id)
         {
             return (_context.Cities?.Any(e => e.Id == id)).GetValueOrDefault();
         }
+
+
+        // Map [City => CityDto]
+        private static CityDto ItemToDTO(City city) =>
+            new CityDto
+            {
+                Id = city.Id,
+                Name = city.Name,
+                Population = city.Population,
+                IsCapital = city.IsCapital
+            };
+    
     }
 }

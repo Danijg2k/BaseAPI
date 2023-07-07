@@ -1,5 +1,4 @@
-﻿using BaseAPI.Logging;
-using BaseAPI.Utilities.Constants;
+﻿using BaseAPI.Utilities.Constants;
 
 namespace BaseAPI.Middleware
 {
@@ -17,7 +16,7 @@ namespace BaseAPI.Middleware
         public async Task InvokeAsync(HttpContext context)
         {
             // Log the incoming request path
-            _logger.Log(LogLevel.Information, LoggingConstants.requestPath, context.Request.Path);
+            _logger.LogInformation(LoggingConstants.requestPath, context.Request.Path);
 
             await _next(context);
 

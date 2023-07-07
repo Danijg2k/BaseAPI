@@ -1,5 +1,4 @@
-﻿using BaseAPI.Logging;
-using BaseAPI.Utilities.Constants;
+﻿using BaseAPI.Utilities.Constants;
 using System.Diagnostics;
 
 namespace BaseAPI.Middleware
@@ -23,7 +22,6 @@ namespace BaseAPI.Middleware
             await _next(context);
 
             watch.Stop();
-            // _logger.Log(LogLevel.Information, LoggingConstants.execTime, watch.ElapsedMilliseconds);
             _logger.LogInformation(LoggingConstants.execTime, watch.ElapsedMilliseconds);
         }
     }
