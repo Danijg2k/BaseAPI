@@ -37,7 +37,7 @@ namespace BaseAPI.Controllers
         /// </remarks>
         /// <response code="200">Always returned (if data does or doesn't exist)</response>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(List<CityDto>))]
         public async Task<IActionResult> GetCities()
         {
             return Ok(await _context.Cities
@@ -61,7 +61,7 @@ namespace BaseAPI.Controllers
         /// <response code="200">If item with given id is retrieved</response>
         /// <response code="404">If item with given id doesn't exist</response>
         [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(CityDto))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetCity(int id)
         {
@@ -162,7 +162,7 @@ namespace BaseAPI.Controllers
         /// <response code="201">Returns the newly created item</response>
         /// <response code="400">If the item is null</response>
         [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(CityDto))]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<IActionResult> PostCity(CityDto cityDto)
         {
